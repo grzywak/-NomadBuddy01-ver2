@@ -1,0 +1,73 @@
+﻿@model NomadBuddy00.Models.TripPlan
+
+@{
+    ViewData["Title"] = "Trip Plan Details";
+}
+
+<h1>@Model.Name</h1>
+
+<p>
+    <a asp-action="Create" asp-controller="TripStop" asp-route-tripPlanId="@Model.Id" class="btn btn-success">➕ Add New Stop</a>
+</p>
+
+@if (Model.TripStops == null || !Model.TripStops.Any())
+{
+    <p>No stops added yet.</p>
+}
+else
+{
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>City</th>
+                <th>Country</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Visa Info</th>
+                <th>Notes</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var stop in Model.TripStops.OrderBy(s => s.StartDate))
+            {
+                <tr>
+                    <td>@Html.Raw(stop.City?.Name ?? "<i>No city</i>")</td>
+                    <td>@Html.Raw(stop.Country?.Name ?? "<i>Unknown</i>")</td>
+                    <td>
+                        @Html.Raw(stop.StartDate != default(DateTime)
+                                 ? stop.StartDate.ToString("yyyy-MM-dd")
+                                 : "<i>No start date</i>")
+                    </td>
+                    <td>
+                        @Html.Raw(stop.EndDate != default(DateTime) && stop.EndDate > stop.StartDate
+                                 ? stop.EndDate.ToString("yyyy-MM-dd")
+                                 : "<i>No end date</i>")
+                    </td>
+                    <td>
+                        @if (stop.VisaPolicy != null)
+                        {
+                            <div>
+                                <strong>@stop.VisaPolicy.AccessType</strong><br />
+                                @if (stop.VisaPolicy.VisaFreePeriodDays.HasValue)
+                                {
+                                    <span>🟢 Free stay: @stop.VisaPolicy.VisaFreePeriodDays.Value days</span>
+
+                                    <br />
+                                }
+                                @if (!string.IsNullOrEmpty(stop.VisaPolicy.Notes))
+                                {
+                                    <span>📌 @stop.VisaPolicy.Notes</span>
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <span><i>No visa info</i></span>
+                        }
+                    </td>
+                    <td>@Html.Raw(string.IsNullOrWhiteSpace(stop.Notes) ? "<i>-</i>" : stop.Notes)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

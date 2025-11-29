@@ -1,0 +1,38 @@
+﻿@model List<NomadBuddy00.Models.TripPlan>
+
+@{
+    ViewData["Title"] = "My Trips";
+}
+
+<h1 class="mb-4">My Trip Plans</h1>
+
+<a class="btn btn-success mb-4" asp-action="Create">+ Create New Trip Plan</a>
+
+@if (!Model.Any())
+{
+    <p>No trip plans found. Start planning your next adventure!</p>
+}
+else
+{
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Plan Name</th>
+                <th>Created</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var plan in Model)
+            {
+                <tr>
+                    <td>@plan.Name</td>
+                    <td>@plan.CreatedAt.ToShortDateString()</td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@plan.Id" class="btn btn-primary btn-sm">View Details</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

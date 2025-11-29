@@ -1,0 +1,81 @@
+﻿@model List<NomadBuddy00.Models.TripPin>
+
+@{
+    ViewData["Title"] = "Trip Map";
+    var matchId = (int)ViewData["MatchId"];
+}
+
+<h2>Trip Map</h2>
+
+<div class="row">
+    <div class="col-md-6">
+        <p><strong>Match ID:</strong> @ViewData["MatchId"]</p>
+        <form asp-action="Add" method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="NomadMatchId" value="@matchId" />
+            <div class="mb-2">
+                <label>Title</label>
+                <input name="Title" class="form-control" required />
+            </div>
+            <div class="mb-2">
+                <label>Description</label>
+                <textarea name="Description" class="form-control"></textarea>
+            </div>
+            <div class="mb-2">
+                <label>Latitude</label>
+                <input name="Latitude" class="form-control" id="LatitudeInput" required />
+            </div>
+            <div class="mb-2">
+                <label>Longitude</label>
+                <input name="Longitude" class="form-control" id="LongitudeInput" required />
+            </div>
+            <button type="submit" class="btn btn-primary">Add Pin</button>
+        </form>
+
+        <h4 class="mt-4">Your Pins</h4>
+        <ul>
+            @foreach (var pin in Model)
+            {
+                <li>
+                    <strong>@pin.Title</strong> - @pin.TripPinStatus
+                    <br />
+                    @pin.Description
+                </li>
+            }
+        </ul>
+    </div>
+
+    <div class="col-md-6">
+        <div id="map" style="height: 500px;"></div>
+    </div>
+</div>
+
+@section Scripts {
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script>
+        var map = L.map('map').setView([20.0, 0.0], 2);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 18
+        }).addTo(map);
+
+        @foreach (var pin in Model)
+        {
+            <text>
+                    L.marker([@pin.Latitude, @pin.Longitude])
+                        .addTo(map)
+                        .bindPopup("<b>@pin.Title</b><br/>@pin.Description<br/><i>Status: @pin.TripPinStatus</i>");
+            </text>
+        }
+
+        // kliknięcia na mapie – automatyczne wpisanie współrzędnych
+        map.on('click', function(e) {
+            var lat = e.latlng.lat.toFixed(6);
+            var lng = e.latlng.lng.toFixed(6);
+            document.getElementById('LatitudeInput').value = lat;
+            document.getElementById('LongitudeInput').value = lng;
+        });
+    </script>
+}

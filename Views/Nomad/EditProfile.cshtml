@@ -1,0 +1,89 @@
+﻿@model NomadBuddy00.ViewModels.NomadProfileEditViewModel
+
+@{
+    ViewData["Title"] = "Edit Profile";
+}
+
+<h2>Edit Profile</h2>
+
+<form asp-action="EditProfile" method="post">
+    <input type="hidden" asp-for="UserId" />
+
+    <div class="form-floating mb-3">
+        <input asp-for="FirstName" class="form-control" />
+        <label asp-for="FirstName"></label>
+        <span asp-validation-for="FirstName" class="text-danger"></span>
+    </div>
+
+    <div class="form-floating mb-3">
+        <input asp-for="LastName" class="form-control" />
+        <label asp-for="LastName"></label>
+        <span asp-validation-for="LastName" class="text-danger"></span>
+    </div>
+
+    <div class="form-floating mb-3">
+        <select asp-for="Gender" class="form-select" asp-items="Html.GetEnumSelectList<NomadBuddy00.Enums.Gender>()"></select>
+        <label asp-for="Gender"></label>
+        <span asp-validation-for="Gender" class="text-danger"></span>
+    </div>
+
+    <div class="form-floating mb-3">
+        <select asp-for="CountryId" class="form-select"
+                asp-items="@(new SelectList(ViewData["Countries"] as List<Country>, "Id", "Name", Model.CountryId))">
+        </select>
+        <label asp-for="CountryId"></label>
+        <span asp-validation-for="CountryId" class="text-danger"></span>
+    </div>
+
+    <div class="form-floating mb-3">
+        <select asp-for="NationalityId" class="form-select"
+                asp-items="@(new SelectList(ViewData["Nationalities"] as List<Nationality>, "Id", "Name", Model.NationalityId))">
+        </select>
+        <label asp-for="NationalityId"></label>
+        <span asp-validation-for="NationalityId" class="text-danger"></span>
+    </div>
+
+    <div class="form-floating mb-3">
+        <select asp-for="NomadType" class="form-select" asp-items="Html.GetEnumSelectList<NomadBuddy00.Enums.NomadType>()"></select>
+        <label asp-for="NomadType"></label>
+        <span asp-validation-for="NomadType" class="text-danger"></span>
+    </div>
+
+    <div class="form-floating mb-3">
+        <select asp-for="TravelBudget" class="form-select" asp-items="Html.GetEnumSelectList<NomadBuddy00.Enums.TravelBudget>()"></select>
+        <label asp-for="TravelBudget"></label>
+        <span asp-validation-for="TravelBudget" class="text-danger"></span>
+    </div>
+
+    <div class="form-floating mb-3">
+        <select asp-for="PreferredLanguage" class="form-select" asp-items="Html.GetEnumSelectList<NomadBuddy00.Enums.Language>()"></select>
+        <label asp-for="PreferredLanguage"></label>
+        <span asp-validation-for="PreferredLanguage" class="text-danger"></span>
+    </div>
+
+    <div class="form-floating mb-3">
+        <select asp-for="CurrentCountryId" class="form-select"
+                asp-items="@(new SelectList(ViewData["Countries"] as List<Country>, "Id", "Name", Model.CurrentCountryId))">
+            <option value="">-- Select Current Country --</option>
+        </select>
+        <label asp-for="CurrentCountryId"></label>
+        <span asp-validation-for="CurrentCountryId" class="text-danger"></span>
+    </div>
+
+    <div class="form-floating mb-3">
+        <select asp-for="CurrentCityId" class="form-select"
+                asp-items="@(new SelectList(ViewData["Cities"] as List<City>, "Id", "Name", Model.CurrentCityId))">
+            <option value="">-- Select Current City --</option>
+        </select>
+        <label asp-for="CurrentCityId"></label>
+        <span asp-validation-for="CurrentCityId" class="text-danger"></span>
+    </div>
+
+
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+    <a asp-action="Index" asp-controller="NomadDashboard" class="btn btn-secondary">Cancel</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

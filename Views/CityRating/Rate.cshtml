@@ -1,0 +1,328 @@
+﻿@model NomadBuddy00.ViewModels.CityFullRatingViewModel
+
+@{
+    ViewData["Title"] = "Rate City";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">🏙️ Rate: @Model.City.Name, @Model.City.Country</h2>
+
+    <!-- SAFETY SECTION -->
+    <div class="card mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">🛡️ Safety Rating</h5>
+            <button class="btn btn-sm btn-outline-primary" data-bs-toggle="collapse" data-bs-target="#safetyCollapse">
+                Toggle
+            </button>
+        </div>
+        <div class="collapse show" id="safetyCollapse">
+            <div class="card-body">
+                @if (Model.SafetyStats != null)
+                {
+                    <p>🌞 <strong>Avg Day Safety:</strong> @Model.SafetyStats.AvgDaySafety.ToString("0.0") / 5</p>
+                    <p>🌙 <strong>Avg Night Safety:</strong> @Model.SafetyStats.AvgNightSafety.ToString("0.0") / 5</p>
+                    <p>🚨 <strong>Harassment Reports:</strong> @Model.SafetyStats.HarassmentRate.ToString("0.0")%</p>
+                }
+
+                <form asp-action="SubmitSafetyRating" asp-controller="CityRating" method="post">
+                    <input type="hidden" name="CityId" value="@Model.City.Id" />
+
+                    <div class="mb-3">
+                        <label class="form-label">🌞 Day Safety (1-5)</label>
+                        <input type="number" name="DaySafety" class="form-control" min="1" max="5"
+                               value="@Model.SafetyUserRating?.DaySafety ?? 0" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">🌙 Night Safety (1-5)</label>
+                        <input type="number" name="NightSafety" class="form-control" min="1" max="5"
+                               value="@Model.SafetyUserRating?.NightSafety ?? 0" required />
+                    </div>
+
+                    <label class="form-label">🚨 Were you harassed?</label><br />
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="FeltHarassed" value="true"
+                        @(Model.SafetyUserRating?.FeltHarassed == true ? "checked" : "") />
+                        <label class="form-check-label">Yes</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="FeltHarassed" value="false"
+                        @(Model.SafetyUserRating?.FeltHarassed == false ? "checked" : "") />
+                        <label class="form-check-label">No</label>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary mt-3">Submit Safety Rating</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- HEALTHCARE SECTION -->
+    <div class="card mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">🏥 Healthcare Rating</h5>
+            <button class="btn btn-sm btn-outline-primary" data-bs-toggle="collapse" data-bs-target="#healthCollapse">
+                Toggle
+            </button>
+        </div>
+        <div class="collapse show" id="healthCollapse">
+            <div class="card-body">
+                @if (Model.HealthcareStats != null)
+                {
+                    <p>🩺 <strong>Avg Availability:</strong> @Model.HealthcareStats.AvgAvailabilityScore.ToString("0.0") / 5</p>
+                    <p>💵 <strong>Avg Visit Cost:</strong> $@Model.HealthcareStats.AvgDoctorVisitCost.ToString("0.00")</p>
+                    <p>💳 <strong>Avg Insurance:</strong> $@Model.HealthcareStats.AvgInsuranceMonthlyCost.ToString("0.00")</p>
+                }
+
+                <form asp-action="SubmitHealthcareRating" asp-controller="CityRating" method="post">
+                    <input type="hidden" name="CityId" value="@Model.City.Id" />
+
+                    <div class="mb-3">
+                        <label class="form-label">🩺 Availability (1-5)</label>
+                        <input type="number" name="AvailabilityScore" class="form-control" min="1" max="5"
+                               value="@Model.HealthcareUserRating?.AvailabilityScore ?? 0" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">💵 Average Doctor Visit Cost ($)</label>
+                        <input type="number" name="AvgDoctorVisitCost" step="0.01" class="form-control"
+                               value="@Model.HealthcareUserRating?.AvgDoctorVisitCost ?? 0" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">💳 Average Monthly Insurance Cost ($)</label>
+                        <input type="number" name="AvgInsuranceMonthlyCost" step="0.01" class="form-control"
+                               value="@Model.HealthcareUserRating?.AvgInsuranceMonthlyCost ?? 0" required />
+                    </div>
+
+                    <button type="submit" class="btn btn-primary mt-3">Submit Healthcare Rating</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- ENTERTAINMENT SECTION -->
+    <div class="card mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">🎉 Entertainment Rating</h5>
+            <button class="btn btn-sm btn-outline-primary" data-bs-toggle="collapse" data-bs-target="#entertainmentCollapse">
+                Toggle
+            </button>
+        </div>
+        <div class="collapse show" id="entertainmentCollapse">
+            <div class="card-body">
+                @if (Model.EntertainmentStats != null)
+                {
+                    <p>🎶 <strong>Avg Nightlife:</strong> @Model.EntertainmentStats.AvgNightlifeScore.ToString("0.0") / 5</p>
+                    <p>🎫 <strong>Avg Events:</strong> @Model.EntertainmentStats.AvgEventsFrequencyScore.ToString("0.0") / 5</p>
+                    <p>😎 <strong>Avg Youth Vibe:</strong> @Model.EntertainmentStats.AvgYouthVibeScore.ToString("0.0") / 5</p>
+                }
+
+                <form asp-action="SubmitEntertainmentRating" asp-controller="CityRating" method="post">
+                    <input type="hidden" name="CityId" value="@Model.City.Id" />
+
+                    <div class="mb-3">
+                        <label class="form-label">🎶 Nightlife (1-5)</label>
+                        <input type="number" name="NightlifeScore" class="form-control" min="1" max="5"
+                               value="@Model.EntertainmentUserRating?.NightlifeScore ?? 0" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">🎫 Events Frequency (1-5)</label>
+                        <input type="number" name="EventsFrequencyScore" class="form-control" min="1" max="5"
+                               value="@Model.EntertainmentUserRating?.EventsFrequencyScore ?? 0" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">😎 Youth Vibe (1-5)</label>
+                        <input type="number" name="YouthVibeScore" class="form-control" min="1" max="5"
+                               value="@Model.EntertainmentUserRating?.YouthVibeScore ?? 0" required />
+                    </div>
+
+                    <button type="submit" class="btn btn-primary mt-3">Submit Entertainment Rating</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- TRANSPORTATION SECTION -->
+    <div class="card mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">🚍 Transportation Rating</h5>
+            <button class="btn btn-sm btn-outline-primary" data-bs-toggle="collapse" data-bs-target="#transportCollapse">
+                Toggle
+            </button>
+        </div>
+        <div class="collapse show" id="transportCollapse">
+            <div class="card-body">
+                @if (Model.TransportStats != null)
+                {
+
+                    <p>🚌 <strong>Avg Public Transport:</strong> @Model.TransportStats.AvgPublicTransportScore.ToString("0.0") / 5</p>
+                    <p>🌙 <strong>Avg Night Transport:</strong> @Model.TransportStats.AvgNightTransportScore.ToString("0.0") / 5</p>
+                    <p>🚴 <strong>Avg Bike Friendly:</strong> @Model.TransportStats.AvgBikeFriendlyScore.ToString("0.0") / 5</p>
+                    <p>🚶 <strong>Avg Walkability:</strong> @Model.TransportStats.AvgWalkabilityScore.ToString("0.0") / 5</p>
+                    <p>💰 <strong>Avg Transport Cost:</strong> @Model.TransportStats.AvgTransportCostScore.ToString("0.0") / 5</p>
+                    <p>📱 <strong>Avg App Convenience:</strong> @Model.TransportStats.AvgAppConvenienceScore.ToString("0.0") / 5</p>
+                    <p>🏍️ <strong>Avg Motorbike Ease:</strong> @Model.TransportStats.AvgMotorbikeEaseScore.ToString("0.0") / 5</p>
+                }
+
+                <form asp-action="SubmitTransportRating" asp-controller="CityRating" method="post">
+                    <input type="hidden" name="CityId" value="@Model.City.Id" />
+                    <div class="mb-3">
+                        <label class="form-label">🚌 Public Transport (1-5)</label>
+                        <input type="number" name="PublicTransportScore" class="form-control" min="1" max="5"
+                               value="@Model.TransportUserRating?.PublicTransportScore ?? 0" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">🌙 Night Transport (1-5)</label>
+                        <input type="number" name="NightTransportScore" class="form-control" min="1" max="5"
+                               value="@Model.TransportUserRating?.NightTransportScore ?? 0" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">🚴 Bike Friendly (1-5)</label>
+                        <input type="number" name="BikeFriendlyScore" class="form-control" min="1" max="5"
+                               value="@Model.TransportUserRating?.BikeFriendlyScore ?? 0" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">🚶 Walkability (1-5)</label>
+                        <input type="number" name="WalkabilityScore" class="form-control" min="1" max="5"
+                               value="@Model.TransportUserRating?.WalkabilityScore ?? 0" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">💰 Transport Cost (1-5)</label>
+                        <input type="number" name="TransportCostScore" class="form-control" min="1" max="5"
+                               value="@Model.TransportUserRating?.TransportCostScore ?? 0" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">📱 App Convenience (1-5)</label>
+                        <input type="number" name="AppConvenienceScore" class="form-control" min="1" max="5"
+                               value="@Model.TransportUserRating?.AppConvenienceScore ?? 0" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">🏍️ Motorbike Ease (1-5)</label>
+                        <input type="number" name="MotorbikeEaseScore" class="form-control" min="1" max="5"
+                               value="@Model.TransportUserRating?.MotorbikeEaseScore ?? 0" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">💬 Comment</label>
+                        <textarea name="Comment" class="form-control">@Model.TransportUserRating?.Comment</textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary mt-3">Submit Transport Rating</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+<!-- COST OF LIVING SECTION -->
+<div class="card mb-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">💰 Cost of Living</h5>
+        <button class="btn btn-sm btn-outline-primary" data-bs-toggle="collapse" data-bs-target="#costCollapse">
+            Toggle
+        </button>
+    </div>
+    <div class="collapse show" id="costCollapse">
+        <div class="card-body">
+            @if (Model.CostOfLivingStats != null)
+            {
+                <p>🍽️ <strong>Avg Food:</strong> $@Model.CostOfLivingStats.AvgFood.ToString("0.00")</p>
+                <p>🏠 <strong>Avg Housing:</strong> $@Model.CostOfLivingStats.AvgHousing.ToString("0.00")</p>
+                <p>🚌 <strong>Avg Transport:</strong> $@Model.CostOfLivingStats.AvgTransport.ToString("0.00")</p>
+                <p>🎉 <strong>Avg Leisure:</strong> $@Model.CostOfLivingStats.AvgLeisure.ToString("0.00")</p>
+            }
+
+            <form asp-action="SubmitCostOfLivingRating" asp-controller="CityRating" method="post">
+                <input type="hidden" name="CityId" value="@Model.City.Id" />
+
+                <div class="mb-3">
+                    <label class="form-label">⏳ Is this Monthly or Daily?</label><br />
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="IsMonthly" value="true"
+                               @(Model.CostOfLivingUserRating?.IsMonthly == true ? "checked" : "") required />
+                        <label class="form-check-label">Monthly</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="IsMonthly" value="false"
+                               @(Model.CostOfLivingUserRating?.IsMonthly == false ? "checked" : "") />
+                        <label class="form-check-label">Daily</label>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">💵 Select Budget Level</label>
+                    <select name="BudgetLevel" class="form-select" required>
+                        @foreach (var level in Enum.GetValues(typeof(NomadBuddy00.Enums.TravelBudget)))
+                        {
+                                <option value="@((int)level)" selected="@(Model.CostOfLivingUserRating?.BudgetLevel == (NomadBuddy00.Enums.TravelBudget)level ? "selected" : null)">
+                                    @level
+                                </option>
+                        }
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">🍽️ Food ($)</label>
+                    <input type="number" name="Food" step="0.01" class="form-control"
+                           value="@Model.CostOfLivingUserRating?.Food ?? 0" required />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">🏠 Housing ($)</label>
+                    <input type="number" name="Housing" step="0.01" class="form-control"
+                           value="@Model.CostOfLivingUserRating?.Housing ?? 0" required />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">🚌 Transport ($)</label>
+                    <input type="number" name="Transport" step="0.01" class="form-control"
+                           value="@Model.CostOfLivingUserRating?.Transport ?? 0" required />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">🎉 Leisure ($)</label>
+                    <input type="number" name="Leisure" step="0.01" class="form-control"
+                           value="@Model.CostOfLivingUserRating?.Leisure ?? 0" required />
+                </div>
+
+                <button type="submit" class="btn btn-primary mt-3">Submit Cost of Living Rating</button>
+            </form>
+                <table class="table table-bordered mt-4">
+                    <thead>
+                        <tr>
+                            <th>Budget Level</th>
+                            <th>Period</th>
+                            <th>Avg Food</th>
+                            <th>Avg Housing</th>
+                            <th>Avg Transport</th>
+                            <th>Avg Leisure</th>
+                            <th>Ratings Count</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var stat in Model.CostOfLivingAllStats)
+                        {
+                            <tr>
+                                <td>@stat.BudgetLevel</td>
+                                <td>@(stat.IsMonthly ? "Monthly" : "Daily")</td>
+                                <td>$@stat.AvgFood.ToString("0.00")</td>
+                                <td>$@stat.AvgHousing.ToString("0.00")</td>
+                                <td>$@stat.AvgTransport.ToString("0.00")</td>
+                                <td>$@stat.AvgLeisure.ToString("0.00")</td>
+                                <td>@stat.TotalRatingsCount</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+        </div>
+    </div>
+</div>
+
+
+    <a asp-action="Details" asp-controller="CityRecommendation" asp-route-id="@Model.City.Id" class="btn btn-secondary">
+        ← Back to City Info
+    </a>
+</div>

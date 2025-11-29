@@ -1,0 +1,47 @@
+﻿@model List<NomadBuddy00.Models.Nomad>
+@using NomadBuddy00.Models
+@using NomadBuddy00.Enums
+
+@{
+    ViewData["Title"] = "Discover Nomads";
+    var currentMode = (MatchMode)ViewBag.Mode;
+}
+
+<h2>@ViewData["Title"] (@currentMode mode)</h2>
+
+<!-- Toggle between Friends and Networking -->
+<form asp-action="Discover" asp-controller="Nomad" method="get" class="mb-4">
+    <label for="mode">Choose mode:</label>
+    <select name="mode" id="mode" onchange="this.form.submit()" class="form-select w-auto d-inline-block ms-2">
+        <option value="Friends" selected="@(currentMode == MatchMode.Friends)">Friends</option>
+        <option value="Networking" selected="@(currentMode == MatchMode.Networking)">Networking</option>
+    </select>
+</form>
+
+@if (Model.Count == 0)
+{
+    <p>No other nomads to show.</p>
+}
+else
+{
+    <div class="row">
+        @foreach (var nomad in Model)
+        {
+            <div class="col-md-4 mb-3">
+                <div class="card p-3">
+                    <h5>@nomad.User.FirstName @nomad.User.LastName</h5>
+                    <p><strong>Country:</strong> @nomad.User.Country</p>
+                    <p><strong>Language:</strong> @nomad.PreferredLanguage</p>
+                    <p><strong>Travel Style:</strong> @nomad.TravelBudget</p>
+
+                    <form asp-action="Like" asp-controller="NomadLike" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="id" value="@nomad.UserId" />
+                        <input type="hidden" name="mode" value="@currentMode" />
+                        <button type="submit" class="btn btn-primary">Like (@currentMode)</button>
+                    </form>
+                </div>
+            </div>
+        }
+    </div>
+}

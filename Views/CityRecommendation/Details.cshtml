@@ -1,0 +1,233 @@
+﻿@model NomadBuddy00.ViewModels.CityDetailsViewModel
+@{
+    ViewData["Title"] = "City Details";
+    var tags = ViewBag.AllTags as List<NomadBuddy00.Models.CityTag>;
+    var safetyStats = ViewBag.SafetyStats as NomadBuddy00.ViewModels.CitySafetyStatsViewModel;
+}
+
+<!-- GWIAZDKOWY CSS -->
+<style>
+    .star-rating {
+        direction: rtl;
+        display: inline-flex;
+        font-size: 1.5rem;
+        justify-content: flex-start;
+    }
+
+        .star-rating input[type="radio"] {
+            display: none;
+        }
+
+        .star-rating label {
+            color: #ccc;
+            cursor: pointer;
+            transition: color 0.2s;
+            padding: 0 0.1rem;
+        }
+
+            .star-rating input[type="radio"]:checked ~ label,
+            .star-rating label:hover,
+            .star-rating label:hover ~ label {
+                color: gold;
+            }
+</style>
+
+<div class="container mt-4">
+    <h2 class="mb-3">@Model.City.Name, @Model.City.Country</h2>
+
+    <div class="row mb-4">
+        <!-- CITY INFO -->
+        <div class="col-md-6">
+            <div class="card shadow-sm p-3">
+                <h5 class="card-title">📊 City Info</h5>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        🌐 <strong>Internet Speed:</strong> @Model.City.AverageInternetSpeedMbps Mbps<br />
+                        🟡 Avg Rating: @Model.AvgInternet.ToString("0.0")
+                        @if (Model.UserRating != null)
+                        {
+                          //  <span> | ⭐ You: @Model.UserRating.InternetScore</span>
+                        }
+                    </li>
+                    <li class="list-group-item">
+                        💼 <strong>Coworking Spaces:</strong> @Model.City.NumberOfCoworkingSpaces<br />
+                        🟡 Avg Rating: @Model.AvgCoworking.ToString("0.0")
+                        @if (Model.UserRating != null)
+                        {
+                       //     <span> | ⭐ You: @Model.UserRating.CoworkingScore</span>
+                        }
+                    </li>
+                    <li class="list-group-item">
+                        🏥 <strong>Healthcare Quality:</strong> @Model.City.HealthcareQuality / 5<br />
+                        🟡 Avg Rating: @Model.AvgHealthcare.ToString("0.0")
+                        @if (Model.UserRating != null)
+                        {
+                        //    <span> | ⭐ You: @Model.UserRating.HealthcareScore</span>
+                        }
+                    </li>
+                    <li class="list-group-item">
+                        💰 <strong>Cost of Living:</strong> $@Model.City.CostOfLiving<br />
+                        🟡 Avg Overall: @Model.AvgOverall.ToString("0.0")
+                        @if (Model.UserRating != null)
+                        {
+                            <span> | ⭐ You: @Model.UserRating.OverallScore</span>
+                        }
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- TAG VOTES -->
+        <div class="col-md-6">
+            <div class="card shadow-sm p-3">
+                <h5 class="card-title">🗳 Community Tag Votes</h5>
+
+                @if (Model.City.TagVotes.Any())
+                {
+                    var groupedTags = Model.City.TagVotes
+                    .GroupBy(v => v.CityTag.Text)
+                    .Select(g => new
+                    {
+                        Text = g.Key,
+                        Positive = g.Count(v => v.CityTag.IsPositive),
+                        Negative = g.Count(v => !v.CityTag.IsPositive)
+                    });
+
+                    <ul class="list-group">
+                        @foreach (var tag in groupedTags)
+                        {
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <strong>@tag.Text</strong>
+                                <span>👍 @tag.Positive | 👎 @tag.Negative</span>
+                            </li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <p class="text-muted">No community votes yet.</p>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- TAG VOTING FORM -->
+    <div class="card p-3 shadow-sm mb-4">
+        <h5 class="card-title">✨ Add Your Vote</h5>
+
+        <div class="row">
+            @foreach (var tag in tags!)
+            {
+                <div class="col-6 col-md-4 col-lg-3 mb-2">
+                    <form asp-action="VoteTag" method="post" class="d-inline">
+                        <input type="hidden" name="cityId" value="@Model.City.Id" />
+                        <input type="hidden" name="tagId" value="@tag.Id" />
+                        <button type="submit"
+                                class="btn btn-sm w-100 @((tag.IsPositive ? "btn-outline-success" : "btn-outline-danger"))">
+                            @(tag.IsPositive ? "👍" : "👎") @tag.Text
+                        </button>
+                    </form>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- RATING FORM -->
+    <div class="card p-3 shadow-sm mb-4">
+        <h5 class="card-title">⭐ Rate This City</h5>
+
+        <form asp-action="Rate" method="post">
+            <input type="hidden" name="CityId" value="@Model.City.Id" />
+
+            @{
+                var categories = new[]
+                {
+            //new { Name = "Internet", Emoji = "🌐", Score = Model.UserRating?.InternetScore ?? 0 },
+            //new { Name = "Coworking", Emoji = "💼", Score = Model.UserRating?.CoworkingScore ?? 0 },
+            //new { Name = "Healthcare", Emoji = "🏥", Score = Model.UserRating?.HealthcareScore ?? 0 },
+            new { Name = "Overall", Emoji = "🌟", Score = Model.UserRating?.OverallScore ?? 0 }
+            };
+            }
+
+            @foreach (var cat in categories)
+            {
+                <div class="mb-3">
+                    <label class="form-label d-block">@cat.Emoji @cat.Name</label>
+                    <div class="star-rating">
+                        @for (int i = 5; i >= 1; i--)
+                        {
+                            var isChecked = cat.Score == i ? "checked" : "";
+                            <input type="radio" id="@($"{cat.Name}-{i}")" name="@($"{cat.Name}Score")" value="@i" @isChecked required />
+                            <label for="@($"{cat.Name}-{i}")">★</label>
+                        }
+                    </div>
+                </div>
+            }
+
+            <button type="submit" class="btn btn-success w-100 mt-3">Submit Your Rating</button>
+        </form>
+    </div>
+
+
+    <!-- SAFETY TOGGLE + FORM -->
+    <div class="card p-3 shadow-sm mb-4">
+        <div class="d-flex justify-content-between align-items-center">
+            <h5 class="card-title mb-0">🛡️ Safety Ratings</h5>
+            <button class="btn btn-sm btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#safetySection">
+                Toggle
+            </button>
+        </div>
+
+        <div class="collapse mt-3" id="safetySection">
+            @if (safetyStats != null)
+            {
+                <div class="alert alert-light mb-3">
+                    <p>🔆 <strong>Avg Day Safety:</strong> @safetyStats.AvgDaySafety.ToString("0.0") / 5</p>
+                    <p>🌙 <strong>Avg Night Safety:</strong> @safetyStats.AvgNightSafety.ToString("0.0") / 5</p>
+                    <p>🚨 <strong>Harassment Reports:</strong> @safetyStats.HarassmentRate.ToString("0.0")%</p>
+                </div>
+            }
+            else
+            {
+                <p class="text-muted">No safety ratings yet.</p>
+            }
+
+            <form asp-controller="CityExtendedRatings" asp-action="SubmitSafetyRating" method="post">
+                <input type="hidden" name="CityId" value="@Model.City.Id" />
+
+                <div class="mb-3">
+                    <label class="form-label">🌞 Day Safety (1-5)</label>
+                    <input type="number" name="DaySafety" class="form-control" min="1" max="5" required />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">🌙 Night Safety (1-5)</label>
+                    <input type="number" name="NightSafety" class="form-control" min="1" max="5" required />
+                </div>
+
+                <label>🚨 Were you harassed?</label><br />
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="FeltHarassed" value="true" id="harassedYes" />
+                    <label class="form-check-label" for="harassedYes">Yes</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="FeltHarassed" value="false" id="harassedNo" checked />
+                    <label class="form-check-label" for="harassedNo">No</label>
+                </div>
+
+
+
+                <button type="submit" class="btn btn-primary mt-3">Submit Safety Rating</button>
+            </form>
+
+        </div>
+    </div>
+
+    <a asp-action="Index" class="btn btn-secondary">← Back to Recommendations</a>
+</div>
+
+<div class="text-center mt-4">
+    <a asp-controller="CityRating" asp-action="Rate" asp-route-cityId="@Model.City.Id" class="btn btn-primary btn-lg">
+        ⭐ Rate This City
+    </a>
+</div>

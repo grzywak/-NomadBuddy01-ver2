@@ -1,0 +1,131 @@
+﻿@using NomadBuddy00.Enums
+@model NomadBuddy00.ViewModels.CityRecommendationIndexViewModel
+
+@{
+    ViewData["Title"] = "Top Recommended Cities";
+    var selectedBudget = Model.SelectedBudget;
+    var selectedContinent = Model.SelectedContinent;
+    var selectedCountry = Model.SelectedCountryId;
+    var countries = ViewBag.Countries as List<NomadBuddy00.Models.Country>;
+}
+
+<h2 class="mb-4">🌍 Top Recommended Cities for You</h2>
+
+<h4 class="mt-4 mb-3">⭐ Top Cities Rated by Other @Model.NomadType Nomads</h4>
+
+@if (Model.RecommendedByType.Any())
+{
+    @foreach (var item in Model.RecommendedByType)
+    {
+        <div class="card mb-2 border-success">
+            <div class="card-body">
+                <h5 class="card-title">@item.City.Name, @item.City.Country?.Name</h5>
+                <p>
+                    Average Rating:
+                    @if (item.AverageRating.HasValue)
+                    {
+                        <strong>@item.AverageRating.Value.ToString("0.0")</strong>
+                    }
+                    else
+                    {
+                        <em>Not enough data yet</em>
+                    }
+                </p>
+                <a class="btn btn-outline-success" asp-action="Details" asp-route-id="@item.City.Id">View</a>
+            </div>
+        </div>
+    }
+}
+else
+{
+    <div class="alert alert-info">
+        No cities have been rated yet by <strong>@Model.NomadType</strong> nomads.
+        Be the first to leave a rating!
+    </div>
+}
+
+<form method="get" asp-action="Index" class="mb-4 mt-5">
+    <div class="row g-2 align-items-center">
+        <!-- Travel Budget -->
+        <div class="col-auto">
+            <label for="budgetFilter" class="col-form-label">Budget:</label>
+        </div>
+        <div class="col-auto">
+            <select id="budgetFilter" name="budget" class="form-select" onchange="this.form.submit()">
+                <option value="">-- Any --</option>
+                @foreach (var level in Enum.GetValues(typeof(TravelBudget)))
+                {
+                    <option value="@level" selected="@(selectedBudget == (TravelBudget)level)">@level</option>
+                }
+            </select>
+        </div>
+
+        <!-- Continent -->
+        <div class="col-auto">
+            <label for="continentFilter" class="col-form-label">Continent:</label>
+        </div>
+        <div class="col-auto">
+            <select id="continentFilter" name="continent" class="form-select" onchange="this.form.submit()">
+                <option value="">-- Any --</option>
+                @foreach (var cont in Enum.GetValues(typeof(Continent)))
+                {
+                    <option value="@cont" selected="@(selectedContinent == (Continent)cont)">@cont</option>
+                }
+            </select>
+        </div>
+
+        <!-- Country -->
+        <div class="col-auto">
+            <label for="countryFilter" class="col-form-label">Country:</label>
+        </div>
+        <div class="col-auto">
+            <select id="countryFilter" name="country" class="form-select" onchange="this.form.submit()">
+                <option value="">-- Any --</option>
+                @if (countries != null)
+                {
+                    foreach (var country in countries)
+                    {
+                        <option value="@country.Id" selected="@(selectedCountry == country.Id)">@country.Name</option>
+                    }
+                }
+            </select>
+        </div>
+    </div>
+</form>
+
+<h4 class="mt-5 mb-3">🔍 Filtered Results</h4>
+
+@foreach (var item in Model.FilteredResults)
+{
+    <div class="card mb-3 shadow-sm">
+        <div class="card-body">
+            <h4 class="card-title">@item.City.Name, @item.City.Country?.Name</h4>
+            <p class="card-text">
+                Average Rating:
+                @if (item.AverageRating.HasValue)
+                {
+                    <strong>@item.AverageRating.Value.ToString("0.0")</strong>
+                }
+                else
+                {
+                    <em>Not enough data yet</em>
+                }
+                <br />
+                Internet Speed: @item.City.AverageInternetSpeedMbps Mbps<br />
+                Coworking Spaces: @item.City.NumberOfCoworkingSpaces<br />
+                Healthcare Quality: @item.City.HealthcareQuality / 5<br />
+                Cost of Living:
+                @if (item.CostOfLivingEstimate != null)
+                {
+                    <strong>$@item.CostOfLivingEstimate.Value.ToString("0")</strong>
+                    <span>(@item.BudgetLevel / @(item.IsMonthly == true ? "Monthly" : "Daily"))</span>
+                }
+                else
+                {
+                    <em>Not rated yet</em>
+                }
+            </p>
+            <a class="btn btn-primary" asp-action="Details" asp-route-id="@item.City.Id">View Details</a>
+        </div>
+    </div>
+}

@@ -1,0 +1,22 @@
+﻿@model NomadBuddy00.Models.VisaPolicy
+
+@{
+    ViewData["Title"] = "Visa Details";
+}
+
+<h1>Visa Details for @Model.Country.Name</h1>
+
+<div class="card mt-3">
+    <div class="card-body">
+        <h5 class="card-title">Access Type: @Model.AccessType</h5>
+
+        <p><strong>Visa-Free Period:</strong> @(Model.VisaFreePeriodDays?.ToString() ?? "Not specified") days</p>
+        <p><strong>Allowed Stay:</strong> @(Model.AllowedStayDays?.ToString() ?? "Not specified") days</p>
+        <p><strong>Estimated Cost:</strong> @(Model.EstimatedCostUSD?.ToString("C") ?? "Not specified")</p>
+
+        <p><strong>Notes:</strong></p>
+        <p>@Model.Notes</p>
+
+        <a asp-action="Index" class="btn btn-secondary">Back to Visa List</a>
+    </div>
+</div>

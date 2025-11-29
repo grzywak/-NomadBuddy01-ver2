@@ -1,0 +1,76 @@
+﻿@model NomadBuddy00.ViewModels.NomadDashboardViewModel
+@{
+    ViewData["Title"] = "Welcome, Nomad!";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">👋 Welcome back, @Model.FirstName!</h2>
+
+    <div class="row g-4">
+        <!-- Personality Quiz -->
+        <div class="col-md-4">
+            <div class="card shadow-sm p-3 h-100 border-@((Model.HasCompletedQuiz ? "success" : "warning"))">
+                <h5 class="card-title">🧠 Personality Quiz</h5>
+                <p class="card-text">
+                    @if (Model.HasCompletedQuiz)
+                    {
+                        <span class="text-success">✔ Completed</span>
+                    }
+                    else
+                    {
+                        <span class="text-warning">⚠ Not Done</span>
+                    }
+                </p>
+                <a asp-controller="TravelerQuiz" asp-action="Quiz" class="btn btn-primary w-100">
+                    @(Model.HasCompletedQuiz ? "Retake Quiz" : "Start Quiz")
+                </a>
+            </div>
+        </div>
+
+        <!-- Preferences -->
+        <div class="col-md-4">
+            <div class="card shadow-sm p-3 h-100 border-@((Model.HasSetPreferences ? "success" : "warning"))">
+                <h5 class="card-title">🌍 Preferences</h5>
+                <p class="card-text">
+                    @if (Model.HasSetPreferences)
+                    {
+                        <span class="text-success">✔ Set</span>
+                    }
+                    else
+                    {
+                        <span class="text-warning">⚠ Not Set</span>
+                    }
+                </p>
+                <a asp-controller="NomadPreference" asp-action="Edit" class="btn btn-primary w-100">
+                    @(Model.HasSetPreferences ? "Update Preferences" : "Set Preferences")
+                </a>
+            </div>
+        </div>
+
+        <!-- Friends Profile -->
+        <div class="col-md-4">
+            <div class="card shadow-sm p-3 h-100 border-@((Model.HasCreatedFriendsProfile ? "success" : "warning"))">
+                <h5 class="card-title">🤝 Friends Profile</h5>
+                <p class="card-text">
+                    @if (Model.HasCreatedFriendsProfile)
+                    {
+                        <span class="text-success">✔ Created</span>
+                    }
+                    else
+                    {
+                        <span class="text-warning">⚠ Not Created</span>
+                    }
+                </p>
+                <a asp-controller="FriendsProfile" asp-action="Create" class="btn btn-primary w-100">
+                    @(Model.HasCreatedFriendsProfile ? "Edit Profile" : "Create Profile")
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center mt-5">
+        <a asp-controller="CityRecommendation" asp-action="Index" class="btn btn-success btn-lg px-4">
+            🌆 Go to City Recommendations
+        </a>
+    </div>
+</div>

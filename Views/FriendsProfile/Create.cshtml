@@ -1,0 +1,40 @@
+﻿@model NomadBuddy00.Models.FriendsProfile
+
+@{
+    ViewData["Title"] = "Create Friends Profile";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form asp-action="Create" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <input type="hidden" asp-for="NomadId" />
+
+    <div class="form-group mb-3">
+        <label asp-for="Bio" class="form-label"></label>
+        <textarea asp-for="Bio" class="form-control" rows="4"></textarea>
+        <span asp-validation-for="Bio" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="FunFact" class="form-label"></label>
+        <input asp-for="FunFact" class="form-control" />
+        <span asp-validation-for="FunFact" class="text-danger"></span>
+    </div>
+
+    <div class="form-check mb-3">
+        <input class="form-check-input" type="checkbox" asp-for="IsPartyAnimal" />
+        <label class="form-check-label" asp-for="IsPartyAnimal">
+            Party Animal? 🎉
+        </label>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

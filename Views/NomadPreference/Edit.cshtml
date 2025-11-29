@@ -1,0 +1,47 @@
+﻿@model List<NomadBuddy00.Models.TravelerPreference>
+@{
+    ViewData["Title"] = "Select Your Preferences";
+
+    var suggested = ViewBag.Suggested as List<NomadBuddy00.Models.TravelerPreference>;
+    var selected = ViewBag.Selected as List<int>;
+}
+
+<h2 class="mb-4">🎯 Tailor Your Travel Preferences</h2>
+
+<form asp-action="Edit" method="post">
+    <div class="row">
+        <div class="col-md-6">
+            <h4>🌟 Suggested for You</h4>
+            <div class="list-group">
+                @foreach (var pref in suggested!)
+                {
+                    <label class="list-group-item">
+                        <input type="checkbox" class="form-check-input me-2"
+                               name="selectedPreferences"
+                               value="@pref.Id"
+                        @(selected!.Contains(pref.Id) ? "checked" : "") />
+                        @pref.Label
+                    </label>
+                }
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <h4>📋 Other Preferences</h4>
+            <div class="list-group">
+                @foreach (var pref in Model.Except(suggested!))
+                {
+                    <label class="list-group-item">
+                        <input type="checkbox" class="form-check-input me-2"
+                               name="selectedPreferences"
+                               value="@pref.Id"
+                        @(selected!.Contains(pref.Id) ? "checked" : "") />
+                        @pref.Label
+                    </label>
+                }
+            </div>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-4">💾 Save Preferences</button>
+</form>

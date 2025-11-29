@@ -1,0 +1,21 @@
+﻿@model NomadBuddy00.Models.CollabSpace
+
+<h2>🤝 CollabSpace with Match #@Model.NomadMatchId</h2>
+
+<p><strong>Shared Goal:</strong> @Model.SharedGoal</p>
+
+<hr />
+
+<h4>💡 Idea Bank</h4>
+<ul>
+    @foreach (var idea in Model.Ideas)
+    {
+        <li>@idea.Content</li>
+    }
+</ul>
+
+<form asp-action="AddIdea" method="post">
+    <input type="hidden" name="collabSpaceId" value="@Model.Id" />
+    <input type="text" name="content" placeholder="Add a new idea" class="form-control" />
+    <button type="submit" class="btn btn-primary mt-2">Add Idea</button>
+</form>

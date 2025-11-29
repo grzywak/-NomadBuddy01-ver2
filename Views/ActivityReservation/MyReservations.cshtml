@@ -1,0 +1,31 @@
+﻿@model List<NomadBuddy00.Models.ActivityReservation>
+
+@{
+    ViewData["Title"] = "My Reservations";
+}
+
+<h1>My Reservations</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Activity</th>
+            <th>Location</th>
+            <th>Date</th>
+            <th>Status</th>
+            <th>Reservation Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var r in Model)
+        {
+            <tr>
+                <td>@r.Activity.Title</td>
+                <td>@r.Activity.Location</td>
+                <td>@r.Activity.StartDate.ToString("yyyy-MM-dd HH:mm")</td>
+                <td>@r.Status</td>
+                <td>@r.ReservationDate.ToString("yyyy-MM-dd HH:mm")</td>
+            </tr>
+        }
+    </tbody>
+</table>

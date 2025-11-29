@@ -1,0 +1,29 @@
+﻿@model NomadBuddy00.ViewModels.TravelerQuizResultViewModel
+
+@{
+    ViewData["Title"] = "Your Travel Personality";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Your Travel Personality Results</h2>
+
+    @foreach (var score in Model.Scores)
+    {
+        var percentage = score.Score * 10; // ponieważ max = 10
+
+        <div class="mb-4 p-3 border rounded shadow-sm">
+            <h4>@score.TravelerTypeName</h4>
+            <p class="text-muted">@score.Description</p>
+
+            <div class="progress mb-2" style="height: 24px;">
+                <div class="progress-bar bg-success" role="progressbar" style="width: @percentage%;" aria-valuenow="@percentage" aria-valuemin="0" aria-valuemax="100">
+                    @score.Score / 10
+                </div>
+            </div>
+        </div>
+    }
+
+    <div class="text-center mt-4">
+        <a class="btn btn-primary" href="/">Back to Home</a>
+    </div>
+</div>

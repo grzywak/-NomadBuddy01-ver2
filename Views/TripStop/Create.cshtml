@@ -1,0 +1,70 @@
+﻿@model NomadBuddy00.ViewModels.TripStopCreateViewModel
+
+@{
+    ViewData["Title"] = "Add a New Trip Stop";
+}
+
+<h1 class="mb-4">Add a New Trip Stop</h1>
+
+<form asp-action="Create" method="post">
+    <input type="hidden" asp-for="TripPlanId" />
+
+    <div class="mb-3">
+        <label asp-for="CountryId" class="form-label">Country</label>
+        <select asp-for="CountryId" asp-items="@(new SelectList(ViewBag.Countries, "Id", "Name"))" class="form-select" id="CountryDropdown">
+            <option value="">-- Select a country --</option>
+        </select>
+        <span asp-validation-for="CountryId" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="CityId" class="form-label">City (optional)</label>
+        <select asp-for="CityId" class="form-select" id="CityDropdown">
+            <option value="">-- Select a city --</option>
+        </select>
+        <span asp-validation-for="CityId" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="StartDate" class="form-label">Start Date</label>
+        <input asp-for="StartDate" class="form-control" type="date" />
+        <span asp-validation-for="StartDate" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="EndDate" class="form-label">End Date</label>
+        <input asp-for="EndDate" class="form-control" type="date" />
+        <span asp-validation-for="EndDate" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Notes" class="form-label">Notes</label>
+        <textarea asp-for="Notes" class="form-control" rows="3" placeholder="Optional notes about this stop..."></textarea>
+        <span asp-validation-for="Notes" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Add Stop</button>
+    <a asp-action="Details" asp-controller="TripPlan" asp-route-id="@Model.TripPlanId" class="btn btn-secondary">Cancel</a>
+</form>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#CountryDropdown').change(function () {
+                var countryId = $(this).val();
+                var cityDropdown = $('#CityDropdown');
+                cityDropdown.empty().append('<option value="">-- Select a city --</option>');
+
+                if (countryId) {
+                    $.get('/TripStop/GetCitiesByCountry', { countryId: countryId }, function (data) {
+                        $.each(data, function (i, city) {
+                            cityDropdown.append('<option value="' + city.id + '">' + city.name + '</option>');
+                        });
+                    });
+                }
+            });
+        });
+    </script>
+}

@@ -1,0 +1,52 @@
+﻿@model List<NomadBuddy00.Models.NomadMatch>
+@using NomadBuddy00.Enums
+@{
+    var mode = (NomadBuddy00.Enums.MatchMode)ViewData["Mode"];
+    ViewData["Title"] = mode == MatchMode.Friends ? "My Friends Matches" : "My Networking Matches";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+@if (!Model.Any())
+{
+    <p>You don’t have any matches yet.</p>
+}
+else
+{
+    <div class="row">
+        @foreach (var match in Model)
+        {
+            var other = match.Nomad1.User.Id == User.FindFirst("sub")?.Value
+            ? match.Nomad2.User
+            : match.Nomad1.User;
+
+            <div class="col-md-4 mb-3">
+                <div class="card p-3">
+                    <h5>@other.FirstName @other.LastName</h5>
+                    <p><strong>Country:</strong> @other.Country</p>
+
+                    <a href="#" class="btn btn-outline-secondary disabled">Chat</a>
+
+                    @if (mode == MatchMode.Friends)
+                    {
+                        <a asp-controller="TripMap"
+                           asp-action="Map"
+                           asp-route-matchId="@match.Id"
+                           class="btn btn-outline-info">
+                             Trip Map
+                        </a>
+                    }
+                    else if (mode == MatchMode.Networking)
+                    {
+                        <a asp-controller="CollabSpace"
+                           asp-action="ViewByMatch"
+                           asp-route-matchId="@match.Id"
+                           class="btn btn-outline-info">
+                             CollabSpace
+                        </a>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+}

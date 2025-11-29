@@ -1,0 +1,58 @@
+﻿@model List<NomadBuddy00.Models.VisaPolicy>
+@using NomadBuddy00.Constants
+@using NomadBuddy00.Enums
+
+
+@{
+    ViewData["Title"] = "My Visa Information";
+}
+
+<h1 class="text-center my-4">🌍 My Visa Information</h1>
+
+@if (Model == null || !Model.Any())
+{
+    <div class="alert alert-info text-center">
+        No visa information available for your nationality yet.
+    </div>
+}
+else
+{
+    <table class="table table-hover table-bordered shadow-sm rounded">
+        <thead class="table-light">
+            <tr>
+                <th>Country</th>
+                <th>Visa Type</th>
+                <th>Free Period (days)</th>
+                <th>Allowed Stay (days)</th>
+                <th>Estimated Cost</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var visa in Model)
+            {
+                var visaTypeClass = visa.AccessType switch
+                {
+                    VisaAccessType.VisaFree => "badge bg-success",
+                    VisaAccessType.VisaOnArrival => "badge bg-primary",
+                    VisaAccessType.EVisa => "badge bg-warning text-dark",
+                    VisaAccessType.VisaRequired => "badge bg-danger",
+                    _ => "badge bg-secondary"
+                };
+
+                <tr>
+                    <td><i class="bi bi-geo-alt-fill"></i> @visa.Country.Name</td>
+                    <td><span class="@visaTypeClass">@visa.AccessType.ToString().Replace("Visa", " Visa")</span></td>
+                    <td>@(visa.VisaFreePeriodDays?.ToString() ?? "-")</td>
+                    <td>@(visa.AllowedStayDays?.ToString() ?? "-")</td>
+                    <td>@(visa.EstimatedCostUSD?.ToString("C0") ?? "-")</td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@visa.Id" class="btn btn-outline-secondary btn-sm">
+                            <i class="bi bi-eye"></i> View
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
