@@ -1,5 +1,7 @@
-﻿using NomadBuddy00.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using NomadBuddy00.Data;
 using NomadBuddy00.Models;
+using SQLitePCL;
 
 namespace NomadBuddy00.Repositories
 {
@@ -11,29 +13,38 @@ namespace NomadBuddy00.Repositories
         {
             _context = context;   
         }
-        public Task AddAsync(BuddySupport support)
+        public async Task<BuddySupport> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+           return await _context.BuddySupports
+                .FirstOrDefaultAsync(support => support.Id == id);
+        }
+        public async Task AddAsync(BuddySupport support)
+        {
+            _context.BuddySupports.Add(support);
+            await _context.SaveChangesAsync();
         }
 
-        public Task DeleteAsync(int id)
+        public async Task DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            var supportToDelete = await _context.BuddySupports.FindAsync(id);
+
+            if (supportToDelete != null)
+            {
+                _context.BuddySupports.Remove(supportToDelete);
+                await _context.SaveChangesAsync();
+            }
         }
 
-        public Task<IEnumerable<BuddySupport>> GetAllAsync()
+        public async Task<IEnumerable<BuddySupport>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _context.BuddySupports.ToListAsync();
         }
 
-        public Task<BuddySupport> GetByIdAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
 
-        public Task UpdateAsync(BuddySupport s)
+        public async Task UpdateAsync(BuddySupport s)
         {
-            throw new NotImplementedException();
+            _context.BuddySupports.Update(s);
+            await _context.SaveChangesAsync();
         }
     }
 }
