@@ -41,13 +41,13 @@ namespace NomadBuddy00.Repositories
             return await _context.BuddySupportSessions.ToListAsync();
         }
 
-        public async Task<IEnumerable<BuddySupportSession>> GetRequestsByBuddyAsync(string buddyId)
+        public async Task<IEnumerable<BuddySupportSession>> GetSessionsByBuddyAsync(string buddyId)
         {
             return await _context.BuddySupportSessions
                  .Where(s => s.BuddyId == buddyId).ToListAsync();
         }
 
-        public async Task<IEnumerable<BuddySupportSession>> GetRequestsByNomadAsync(string nomadId)
+        public async Task<IEnumerable<BuddySupportSession>> GetSessionsByNomadAsync(string nomadId)
         {
             return await _context.BuddySupportSessions
                  .Where(s => s.NomadId == nomadId).ToListAsync();
