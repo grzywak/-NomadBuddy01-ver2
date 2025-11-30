@@ -1,4 +1,6 @@
-﻿namespace NomadBuddy00.Models
+﻿using NomadBuddy00.Enums;
+
+namespace NomadBuddy00.Models
 {
     public class BuddySupportSession
     {
@@ -12,7 +14,7 @@
         public Nomad Nomad { get; set; }
         public string BuddyId { get; set; }
         public Buddy Buddy { get; set; }
-        public SessionStatus SessionStatus { get; set; }
+        public SessionStatus SessionStatus { get; set; } = SessionStatus.Scheduled;
 
         //opcjonalnie notatki
         public string? OptionalNotes { get; set; }

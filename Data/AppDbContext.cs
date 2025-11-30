@@ -43,9 +43,15 @@ namespace NomadBuddy00.Data
         public DbSet<CollabSpace> CollabSpaces { get; set; }
         public DbSet<CollabIdea> CollabIdeas { get; set; }
         public DbSet<TripPin> TripPins { get; set; }
+
+        //buddies 
         public DbSet<Buddy> Buddies { get; set; }
         public DbSet<BuddySupport> BuddySupports { get; set; }
         public DbSet<BuddySupportAssignment> BuddySupportAssignments { get; set; }
+        public DbSet<BuddySupportRequest> BuddySupportRequests { get; set; }
+        public DbSet<BuddySupportSession> BuddySupportSessions { get; set; }
+        public DbSet<BuddySupportRating> BuddySupportRatings { get; set; }
+        
         public DbSet<Activity> Activities { get; set; }
         public DbSet<ActivityReservation> ActivityReservations { get; set; } 
         public DbSet<ActivityAssignment> ActivityAssignments { get; set; }
