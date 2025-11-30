@@ -278,21 +278,21 @@ namespace NomadBuddy00.Data
 
 
             modelBuilder.Entity<BuddySupportRating>()
-                .HasOne(s => s.BuddySupportSession)
+                .HasOne(rating => rating.BuddySupportSession)
                 .WithMany()
-                .HasForeignKey(s => s.BuddySupportSessionId)
+                .HasForeignKey(rating => rating.BuddySupportSessionId)
                 .OnDelete(DeleteBehavior.Restrict);
             
             modelBuilder.Entity<BuddySupportRating>()
-                .HasOne(s => s.Nomad)
+                .HasOne(rating => rating.Nomad)
                 .WithMany()
-                .HasForeignKey(s => s.NomadId)
+                .HasForeignKey(rating => rating.NomadId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<BuddySupportRating>()
-                .HasOne(s => s.Buddy)
+                .HasOne(rating => rating.Buddy)
                 .WithMany()
-                .HasForeignKey(s => s.BuddyId)
+                .HasForeignKey(rating => rating.BuddyId)
                 .OnDelete(DeleteBehavior.Restrict);
 
 

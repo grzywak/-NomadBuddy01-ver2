@@ -1188,19 +1188,19 @@ namespace NomadBuddy00.Migrations
                         column: x => x.BuddyId,
                         principalTable: "Buddies",
                         principalColumn: "UserId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_BuddySupportRatings_BuddySupportSessions_BuddySupportSessionId",
                         column: x => x.BuddySupportSessionId,
                         principalTable: "BuddySupportSessions",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_BuddySupportRatings_Nomads_NomadId",
                         column: x => x.NomadId,
                         principalTable: "Nomads",
                         principalColumn: "UserId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(

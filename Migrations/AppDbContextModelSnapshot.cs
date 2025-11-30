@@ -1689,19 +1689,19 @@ namespace NomadBuddy00.Migrations
                     b.HasOne("NomadBuddy00.Models.Buddy", "Buddy")
                         .WithMany()
                         .HasForeignKey("BuddyId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("NomadBuddy00.Models.BuddySupportSession", "BuddySupportSession")
                         .WithMany()
                         .HasForeignKey("BuddySupportSessionId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("NomadBuddy00.Models.Nomad", "Nomad")
                         .WithMany()
                         .HasForeignKey("NomadId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Buddy");
