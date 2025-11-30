@@ -550,8 +550,7 @@ namespace NomadBuddy00.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     BuddySupportId = table.Column<int>(type: "int", nullable: false),
-                    NomadId = table.Column<int>(type: "int", nullable: false),
-                    NomadUserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    NomadId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Message = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RequestStatus = table.Column<int>(type: "int", nullable: false)
                 },
@@ -565,8 +564,8 @@ namespace NomadBuddy00.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_BuddySupportRequests_Nomads_NomadUserId",
-                        column: x => x.NomadUserId,
+                        name: "FK_BuddySupportRequests_Nomads_NomadId",
+                        column: x => x.NomadId,
                         principalTable: "Nomads",
                         principalColumn: "UserId",
                         onDelete: ReferentialAction.Cascade);
@@ -1325,9 +1324,9 @@ namespace NomadBuddy00.Migrations
                 column: "BuddySupportId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BuddySupportRequests_NomadUserId",
+                name: "IX_BuddySupportRequests_NomadId",
                 table: "BuddySupportRequests",
-                column: "NomadUserId");
+                column: "NomadId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_BuddySupports_CityId",

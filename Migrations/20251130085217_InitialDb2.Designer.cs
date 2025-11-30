@@ -12,7 +12,7 @@ using NomadBuddy00.Data;
 namespace NomadBuddy00.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251130075854_InitialDb2")]
+    [Migration("20251130085217_InitialDb2")]
     partial class InitialDb2
     {
         /// <inheritdoc />
@@ -500,10 +500,7 @@ namespace NomadBuddy00.Migrations
                     b.Property<string>("Message")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("NomadId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("NomadUserId")
+                    b.Property<string>("NomadId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
@@ -514,7 +511,7 @@ namespace NomadBuddy00.Migrations
 
                     b.HasIndex("BuddySupportId");
 
-                    b.HasIndex("NomadUserId");
+                    b.HasIndex("NomadId");
 
                     b.ToTable("BuddySupportRequests");
                 });
@@ -1724,7 +1721,7 @@ namespace NomadBuddy00.Migrations
 
                     b.HasOne("NomadBuddy00.Models.Nomad", "Nomad")
                         .WithMany()
-                        .HasForeignKey("NomadUserId")
+                        .HasForeignKey("NomadId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
