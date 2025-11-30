@@ -263,6 +263,18 @@ namespace NomadBuddy00.Data
                 .WithMany()
                 .HasForeignKey(s => s.BuddySupportRequestId)
                 .OnDelete(DeleteBehavior.Restrict);
+            
+            modelBuilder.Entity<BuddySupportSession>()
+                .HasOne(s => s.Nomad)
+                .WithMany()
+                .HasForeignKey(s => s.NomadId)
+                .OnDelete(DeleteBehavior.Restrict);
+            
+            modelBuilder.Entity<BuddySupportSession>()
+                .HasOne(s => s.Buddy)
+                .WithMany()
+                .HasForeignKey(s => s.BuddyId)
+                .OnDelete(DeleteBehavior.Restrict);
                 
                 
                
