@@ -257,7 +257,16 @@ namespace NomadBuddy00.Data
                 .HasForeignKey(s => s.CountryId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // Many-to-Many: Nomads & Activities via ActivityReservation
+            // Restrict nie pozwoli na skasowanie request jest istnieje powiazane bssession
+            modelBuilder.Entity<BuddySupportSession>()
+                .HasOne(s => s.BuddySupportRequest)
+                .WithMany()
+                .HasForeignKey(s => s.BuddySupportRequestId)
+                .OnDelete(DeleteBehavior.Restrict);
+                
+                
+               
+                // Many-to-Many: Nomads & Activities via ActivityReservation
             modelBuilder.Entity<ActivityReservation>()
                 .HasOne(ar => ar.Activity)
                 .WithMany(a => a.Reservations)
