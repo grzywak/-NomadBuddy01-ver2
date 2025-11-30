@@ -275,10 +275,29 @@ namespace NomadBuddy00.Data
                 .WithMany()
                 .HasForeignKey(s => s.BuddyId)
                 .OnDelete(DeleteBehavior.Restrict);
-                
-                
-               
-                // Many-to-Many: Nomads & Activities via ActivityReservation
+
+
+            modelBuilder.Entity<BuddySupportRating>()
+                .HasOne(s => s.BuddySupportSession)
+                .WithMany()
+                .HasForeignKey(s => s.BuddySupportSessionId)
+                .OnDelete(DeleteBehavior.Restrict);
+            
+            modelBuilder.Entity<BuddySupportRating>()
+                .HasOne(s => s.Nomad)
+                .WithMany()
+                .HasForeignKey(s => s.NomadId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<BuddySupportRating>()
+                .HasOne(s => s.Buddy)
+                .WithMany()
+                .HasForeignKey(s => s.BuddyId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+
+
+            // Many-to-Many: Nomads & Activities via ActivityReservation
             modelBuilder.Entity<ActivityReservation>()
                 .HasOne(ar => ar.Activity)
                 .WithMany(a => a.Reservations)
