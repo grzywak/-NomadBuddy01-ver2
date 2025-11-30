@@ -7,7 +7,7 @@ namespace NomadBuddy00.Models
         public int Id { get; set; }
         public int BuddySupportId { get; set; }
         public BuddySupport BuddySupport { get; set; }
-        public int NomadId { get; set;  }
+        public string NomadId { get; set;  }
         public Nomad Nomad { get; set;  }
 
         public DateTime RequestTime = DateTime.UtcNow;

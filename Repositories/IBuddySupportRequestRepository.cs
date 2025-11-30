@@ -9,5 +9,8 @@ namespace NomadBuddy00.Repositories
         Task DeleteAsync(int supportId);
         Task AddAsync(BuddySupportRequest supportRequest);
         Task UpdateAsync(BuddySupportRequest supportRequest);
+
+        //do wyszukiwania requests po nomadach 
+        Task<IEnumerable<BuddySupportRequest>> GetRequestsByNomadAsync(string nomadId);
     }
 }
