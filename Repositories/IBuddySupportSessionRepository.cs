@@ -11,7 +11,7 @@ namespace NomadBuddy00.Repositories
         Task UpdateAsync(BuddySupportSession session);
 
         //do wyszukiwania sessions po nomadach lub buddy
-        Task<IEnumerable<BuddySupportRequest>> GetRequestsByNomadAsync(string nomadId);
-        Task<IEnumerable<BuddySupportRequest>> GetRequestsByBuddyAsync(string buddyId);
+        Task<IEnumerable<BuddySupportSession>> GetRequestsByNomadAsync(string nomadId);
+        Task<IEnumerable<BuddySupportSession>> GetRequestsByBuddyAsync(string buddyId);
     }
 }
