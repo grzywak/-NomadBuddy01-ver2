@@ -43,11 +43,14 @@ namespace NomadBuddy00.Controllers
         [Authorize(Roles = "Buddy,Admin")]
         public async Task<IActionResult> Create(BuddySupport model)
         {
-            var result = await _service.CreateAsync(model);
+            if (!ModelState.IsValid)
+                return View(model);
 
-            if (!result)
+            var saved = await _service.CreateAsync(model);
+
+            if (!saved)
             {
-                ModelState.AddModelError("", "went wrong");
+                ModelState.AddModelError("", "not saved");
                 return View(model);
             }
 
