@@ -14,8 +14,12 @@ namespace NomadBuddy00.Services
 
         public async Task<bool> CreateAsync(BuddySupport model)
         {
-            if (string.IsNullOrWhiteSpace(model.Title)) 
-                  return false;
+            if (string.IsNullOrWhiteSpace(model.Title) ||
+                string.IsNullOrWhiteSpace(model.Description))
+                {
+                return false;
+                }
+
             if (model.Price <0)
                 return false;
 
