@@ -41,11 +41,19 @@ namespace NomadBuddy00
             builder.Services.AddScoped<ITripPinRepository, TripPinRepository>();
             builder.Services.AddScoped<IRepository<Activity>, ActivityRepository>();
             builder.Services.AddScoped<IActivityReservationRepository, ActivityReservationRepository>();
+            //buddysupport repos
+            builder.Services.AddScoped<IBuddySupportRepository, BuddySupportRepository>();
+            builder.Services.AddScoped<IBuddySupportRequestRepository, BuddySupportRequestRepository>();
+            builder.Services.AddScoped<IBuddySupportSessionRepository, BuddySupportSessionRepository>();
+
+
 
             //Service
+            builder.Services.AddLogging();
             builder.Services.AddScoped<ICityOverallRatingService, CityOverallRatingService>();
 
-            builder.Services.AddLogging();
+            builder.Services.AddScoped<IBuddySupportService, BuddySupportService>();
+
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();

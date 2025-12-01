@@ -18,5 +18,9 @@ namespace NomadBuddy00.Models
 
         //opcjonalnie notatki
         public string? OptionalNotes { get; set; }
+        public DateTime CreatedOnDate { get; set; } = DateTime.UtcNow;
+        //kiedy buddy oznaczy session jako finish
+        //po finish Session status AwaitingRating
+        public DateTime? CompletedOnDate { get; set; }
     }
 }

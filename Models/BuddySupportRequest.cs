@@ -15,6 +15,12 @@ namespace NomadBuddy00.Models
         //opcjonalnie wiadomosc
         public string? Message { get; set; }
 
+        
         public BuddySupportRequestStatus RequestStatus { get; set; } = BuddySupportRequestStatus.Pending;
+        //kiedy buddy zaakceptowal request
+        public DateTime? AcceptedOnDate { get; set; }
+
+        //kiedy buddy odrzucil request
+        public DateTime? RejectedOnDate { get; set; }
     }
 }
