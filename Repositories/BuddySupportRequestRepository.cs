@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NomadBuddy00.Data;
+using NomadBuddy00.Enums;
 using NomadBuddy00.Models;
 
 namespace NomadBuddy00.Repositories
@@ -45,6 +46,15 @@ namespace NomadBuddy00.Repositories
             return await _context.BuddySupportRequests
                 .Where(request => request.NomadId == nomadId)
                  .ToListAsync();
+        }
+
+        public async Task<bool> HasPendingRequestAsync(int supportId, string nomadId)
+        {
+            return await _context.BuddySupportRequests.AnyAsync(r =>
+                     r.BuddySupportId == supportId &&
+                     r.NomadId == nomadId &&
+                     r.RequestStatus == BuddySupportRequestStatus.Pending);
+
         }
 
         public async Task UpdateAsync(BuddySupportRequest supportRequest)

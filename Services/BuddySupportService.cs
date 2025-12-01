@@ -48,8 +48,20 @@ namespace NomadBuddy00.Services
         }
 
         //obsluga request
-        public Task<bool> SendRequestAsync(int supportId, string nomadId)
+        public async Task<bool> SendRequestAsync(int supportId, string nomadId)
         {
+            //czy support istnieje
+            var support = await _supporRepository.GetByIdAsync(supportId);
+            if (support == null || !support.IsActive)
+            {  
+                return false; 
+            }
+
+            //czy juz zostal wyslany request na ten sam 
+            //var pending = await _requestRepository.g
+
+
+
             throw new NotImplementedException();
         }
         public Task<bool> AcceptRequestAsync(int requestId, string buddyId)
@@ -59,6 +71,11 @@ namespace NomadBuddy00.Services
         public Task<bool> RejectRequestAsync(int requestId, string buddyId)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<bool> HasPendingRequestAsync(int supportId, string nomadId)
+        {
+             return await _requestRepository.HasPendingRequestAsync(supportId, nomadId);
         }
     }
 }

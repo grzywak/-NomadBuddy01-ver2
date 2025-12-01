@@ -45,6 +45,7 @@ namespace NomadBuddy00
             builder.Services.AddScoped<IBuddySupportRepository, BuddySupportRepository>();
             builder.Services.AddScoped<IBuddySupportRequestRepository, BuddySupportRequestRepository>();
             builder.Services.AddScoped<IBuddySupportSessionRepository, BuddySupportSessionRepository>();
+            builder.Services.AddScoped<IBuddySupportRatingRepository, BuddySupportRatingRepository>();
 
 
 

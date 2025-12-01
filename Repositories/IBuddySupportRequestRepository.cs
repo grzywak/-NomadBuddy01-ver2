@@ -12,5 +12,8 @@ namespace NomadBuddy00.Repositories
 
         //do wyszukiwania requests po nomadach 
         Task<IEnumerable<BuddySupportRequest>> GetRequestsByNomadAsync(string nomadId);
+
+        Task<bool> HasPendingRequestAsync(int supportId, string nomadId);
+
     }
 }

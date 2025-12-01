@@ -12,5 +12,9 @@ namespace NomadBuddy00.Services
         Task<bool> SendRequestAsync(int supportId, string nomadId);
         Task<bool> AcceptRequestAsync(int requestId, string buddyId);
         Task<bool> RejectRequestAsync(int requestId, string buddyId);
+
+        //helpers
+        Task<bool> HasPendingRequestAsync(int supportId, string nomadId);
+
     }
 }
