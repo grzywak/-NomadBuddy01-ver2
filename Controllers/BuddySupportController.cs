@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Azure.Core;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using NomadBuddy00.Models;
 using NomadBuddy00.Services;
@@ -8,24 +10,26 @@ namespace NomadBuddy00.Controllers
     [Authorize]
     public class BuddySupportController : Controller
     {
-        private readonly IBuddySupportService _service;
+        private readonly IBuddySupportService _supportService;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public BuddySupportController(IBuddySupportService service)
+        public BuddySupportController(IBuddySupportService service, UserManager<ApplicationUser> userManager)
         {
-            _service = service;
+            _supportService = service;
+            _userManager = userManager;
         }
 
         [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
-            var activeSupports = await _service.GetAllActiveAsync();
+            var activeSupports = await _supportService.GetAllActiveAsync();
             return View(activeSupports);
         }
 
         [AllowAnonymous]
         public async Task<IActionResult> Details(int id)
         { 
-              var support = await _service.GetDetailsAsync(id);
+              var support = await _supportService.GetDetailsAsync(id);
 
             if (support == null)
                 return NotFound();
@@ -46,7 +50,7 @@ namespace NomadBuddy00.Controllers
             if (!ModelState.IsValid)
                 return View(model);
 
-            var saved = await _service.CreateAsync(model);
+            var saved = await _supportService.CreateAsync(model);
 
             if (!saved)
             {
@@ -55,6 +59,27 @@ namespace NomadBuddy00.Controllers
             }
 
             return RedirectToAction(nameof(Index));
+        }
+
+        //requests
+
+        [HttpPost]
+        [Authorize(Roles = "Nomad")]
+        public async Task<IActionResult> SendRequest(int supportId)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null) return Unauthorized();
+
+            var sentRequest = await _supportService.SendRequestAsync(supportId, user.Id);
+
+            if (!sentRequest)
+            {
+                TempData["error"] = "request not sent";
+                return RedirectToAction("Details", new { id = supportId });
+            }
+        
+                TempData["success"] = "request sent";
+                return RedirectToAction("Details", new { id = supportId });
         }
     }
 }
