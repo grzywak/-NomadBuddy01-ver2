@@ -28,19 +28,19 @@ namespace NomadBuddy00.Controllers
 
         [AllowAnonymous]
         public async Task<IActionResult> Details(int id)
-        { 
-              var support = await _supportService.GetDetailsAsync(id);
+        {
+            var support = await _supportService.GetDetailsAsync(id);
 
             if (support == null)
                 return NotFound();
- 
+
             return View(support);
         }
 
         [Authorize(Roles = "Buddy,Admin")]
         public IActionResult Create(int id)
-        { 
-                return View(new BuddySupport());
+        {
+            return View(new BuddySupport());
         }
 
         [HttpPost]
@@ -77,9 +77,33 @@ namespace NomadBuddy00.Controllers
                 TempData["error"] = "request not sent";
                 return RedirectToAction("Details", new { id = supportId });
             }
-        
-                TempData["success"] = "request sent";
-                return RedirectToAction("Details", new { id = supportId });
+
+            TempData["success"] = "request sent";
+            return RedirectToAction("Details", new { id = supportId });
         }
+
+        [HttpPost]
+        [Authorize(Roles = "Buddy")]
+        public async Task<IActionResult> AcceptRequest(int supportId)
+        {
+            var buddy = await _userManager.GetUserAsync(User);
+            if (buddy == null) return Unauthorized();
+
+            var acceptedRequest = await _supportService.AcceptRequestAsync(supportId, buddy.Id);
+
+            if (!acceptedRequest)
+            {
+                TempData["error"] = "cannot accept this request";
+            }
+            else
+            {
+                TempData["success"] = "request accepted";
+
+            }
+
+            return RedirectToAction("MyRequests");
+        }
+
+
     }
 }
