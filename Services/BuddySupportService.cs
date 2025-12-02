@@ -78,10 +78,37 @@ namespace NomadBuddy00.Services
             return true;
         }
 
-        public Task<bool> AcceptRequestAsync(int requestId, string buddyId)
+        public async Task<bool> AcceptRequestAsync(int requestId, string buddyId)
         {
-            throw new NotImplementedException();
+            var request = await _requestRepository.GetByIdAsync(requestId);
+            if (request == null)
+            {
+                return false;
+            }
+
+            //czy request bylo juz zaakceptowane lub odrzucone
+            if (request.RequestStatus != BuddySupportRequestStatus.Pending)
+            {
+                return false;
+            }
+
+            request.RequestStatus = BuddySupportRequestStatus.Accepted;
+            request.AcceptedOnDate = DateTime.UtcNow;
+
+            var newSession = new BuddySupportSession
+            {  
+                BuddySupportRequestId = requestId,
+                NomadId = request.NomadId,
+                BuddyId = buddyId,
+                SessionStatus = SessionStatus.Scheduled,
+                CreatedOnDate = DateTime.UtcNow,
+            };
+
+            await _sessionRepository.AddAsync(newSession);
+            return true;
+
         }
+
         public Task<bool> RejectRequestAsync(int requestId, string buddyId)
         {
             throw new NotImplementedException();
