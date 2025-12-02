@@ -89,9 +89,9 @@ namespace NomadBuddy00.Controllers
             var buddy = await _userManager.GetUserAsync(User);
             if (buddy == null) return Unauthorized();
 
-            var acceptedRequest = await _supportService.AcceptRequestAsync(supportId, buddy.Id);
+            var isRequestAccepted = await _supportService.AcceptRequestAsync(supportId, buddy.Id);
 
-            if (!acceptedRequest)
+            if (!isRequestAccepted)
             {
                 TempData["error"] = "cannot accept this request";
             }
@@ -104,6 +104,27 @@ namespace NomadBuddy00.Controllers
             return RedirectToAction("MyRequests");
         }
 
+        [HttpPost]
+        [Authorize(Roles = "Buddy")]
+        public async Task<IActionResult> RejectRequest(int supportId)
+        {
+            var buddy = await _userManager.GetUserAsync(User);
+            if (buddy == null) return Unauthorized();
+
+            var isRequestRejected = await _supportService.AcceptRequestAsync(supportId, buddy.Id);
+
+            if (!isRequestRejected)
+            {
+                TempData["error"] = "cannot reject this request";
+            }
+            else
+            {
+                TempData["success"] = "request rejected";
+
+            }
+
+            return RedirectToAction("MyRequests");
+        }
 
     }
 }
