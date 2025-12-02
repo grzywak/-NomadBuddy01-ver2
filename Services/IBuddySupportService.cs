@@ -15,6 +15,7 @@ namespace NomadBuddy00.Services
 
         //helpers
         Task<bool> HasPendingRequestAsync(int supportId, string nomadId);
+        Task<IEnumerable<BuddySupportRequest>> GetRequestsForBuddyIdAsync(string buddyId);
 
     }
 }

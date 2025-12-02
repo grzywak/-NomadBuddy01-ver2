@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("NomadBuddy00")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4a96e4cc10549693cf9a56e2eba417ed16c19583")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+00482f598a08768d2f4286d97f14b0e314e1d411")]
 [assembly: System.Reflection.AssemblyProductAttribute("NomadBuddy00")]
 [assembly: System.Reflection.AssemblyTitleAttribute("NomadBuddy00")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

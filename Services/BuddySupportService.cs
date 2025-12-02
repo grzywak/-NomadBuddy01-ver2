@@ -91,5 +91,10 @@ namespace NomadBuddy00.Services
         {
              return await _requestRepository.HasPendingRequestAsync(supportId, nomadId);
         }
+
+        public Task<IEnumerable<BuddySupportRequest>> GetRequestsForBuddyIdAsync(string buddyId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
