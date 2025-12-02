@@ -126,5 +126,15 @@ namespace NomadBuddy00.Controllers
             return RedirectToAction("MyRequests");
         }
 
+        [Authorize(Roles = "Buddy")]
+        public async Task<IActionResult> MyRequests()
+        {
+            var buddy = await _userManager.GetUserAsync(User);
+            if (buddy == null) return Unauthorized();
+
+            var requests = _supportService.GetRequestsForBuddyIdAsync(buddy.Id);
+
+            return View(requests);
+        }
     }
 }
