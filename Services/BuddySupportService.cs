@@ -109,9 +109,26 @@ namespace NomadBuddy00.Services
 
         }
 
-        public Task<bool> RejectRequestAsync(int requestId, string buddyId)
+        public async Task<bool> RejectRequestAsync(int requestId, string buddyId)
         {
-            throw new NotImplementedException();
+            var request = await _requestRepository.GetByIdAsync(requestId);
+            if (request == null)
+            {
+                return false;
+            }
+
+            //czy request bylo juz zaakceptowane lub odrzucone
+            if (request.RequestStatus != BuddySupportRequestStatus.Pending)
+            {
+                return false;
+            }
+
+            request.RequestStatus = BuddySupportRequestStatus.Rejected;
+            request.RejectedOnDate = DateTime.UtcNow;
+
+            await _requestRepository.UpdateAsync(request);
+
+            return true;
         }
 
         public async Task<bool> HasPendingRequestAsync(int supportId, string nomadId)
