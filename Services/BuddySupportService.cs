@@ -1,4 +1,5 @@
-﻿using NomadBuddy00.Models;
+﻿using NomadBuddy00.Enums;
+using NomadBuddy00.Models;
 using NomadBuddy00.Repositories;
 
 namespace NomadBuddy00.Services
@@ -57,13 +58,26 @@ namespace NomadBuddy00.Services
                 return false; 
             }
 
-            //czy juz zostal wyslany request na ten sam 
-            //var pending = await _requestRepository.g
+            //czy nomad ma juz wyslany request na ten sam support
+            var pending = await _requestRepository.HasPendingRequestAsync(supportId, nomadId);
+            if (pending) 
+            {
+                return false;
+            }
 
+            var newRequest = new BuddySupportRequest
+            {
+                BuddySupportId = supportId,
+                NomadId = nomadId,
+                RequestStatus = BuddySupportRequestStatus.Pending,
+                RequestTime = DateTime.UtcNow
 
+            };
 
-            throw new NotImplementedException();
+            await _requestRepository.AddAsync(newRequest);
+            return true;
         }
+
         public Task<bool> AcceptRequestAsync(int requestId, string buddyId)
         {
             throw new NotImplementedException();
